@@ -112,6 +112,16 @@ class Proteins:
         self.__proteins.append(protein)
     def getProteins(self):
         return self.__proteins
+    def outputFeatureVector(self):
+        with open('test.csv', 'w') as f:
+            fieldnames = ['volume']
+            writer = csv.DictWriter(f, fieldnames = fieldnames)
+            writer.writeheader()
+            for protein in self.__proteins:
+                #print(protein)
+                writer.writerow({'volume': protein.data["volume"]})
+                #f.write("%s,%s\n"%(key,my_dict[key]))
+            
 
             
 ## FUNCTIONS #######################################################################################################################
@@ -137,12 +147,16 @@ def loadFile(path):
 #converts Dictionary contents into a csv file
 def convertDictonaryToCSV(my_dict):
     with open('test.csv', 'w') as f:
+        #fieldnames = ['volume']
+        #writer = csv.DictWriter(csvfile, fieldname = fieldnames)
+        #writer.writeheader
         for key in my_dict.keys():
+            #writer.writerow({'volume': my_dict[key].})
             f.write("%s,%s\n"%(key,my_dict[key]))
 
 ## CONSTANTS
 
-SEQUENCE_FILE_PATH = "Test.txt"
+SEQUENCE_FILE_PATH = "Sequence.txt"
 LABEL_FILE_PATH = "Label.txt"
 COMP_FILE_PATH = "comp.csv"
 GDATA_FILE_PATH = "g_data.csv"
@@ -178,5 +192,7 @@ for i in range(len(sequence_data)):
 # print out results
 for protein in proteins.getProteins():
     print(str(protein))
+
+proteins.outputFeatureVector()
 
 print("done...")
