@@ -1,71 +1,71 @@
 import csv
+
+##########################################
+## Created By Steven, Francis, & Giorgi ##
+##########################################
+
 ## Classes ####################################################################################################################################
 
 # this class is an Amino Acid and holds all relavent Amino Acid data. any data not included in this initialy can be added to the self.data Dictionay later
 class AminoAcid:
-    def __init__(self,amino_acid_name,_3_letter_code,_1_letter_code,codons,data = {}):
+    def __init__(self,amino_acid_name,_1_letter_code,data = {}):
         self.name = amino_acid_name
-        self.m3code = _3_letter_code
         self.m1code = _1_letter_code
-        self.__codons = codons
         self.data = data
-    # returns an string array of condons
-    def getCondons(self):
-        return self.__codons.split(',')
-    # returns the codons as a string with comma seperators
-    def getCondonsString(self):
-        return self.__codons
-    # overriden string str() method
-    def __str__(self):
-        a = self.name
-        for key,value in self.data.items():
-            a += "\n\t\t"+str(key)+": "+str(value)
-        return a
+
 # this is a class that holds all the amino acid and realtive data we will use for this assignment.
 # if you want to add more data, then just add it to the 'data' parameter. (see Amino Acid for more detail) 
 class AminoAcids:
     def __init__(self):
         self.__aminoAcids = [
-            AminoAcid("Alanine","Ala","A","GCA,GCC,GCG,GCT",{'volume': 31.0}),
-            AminoAcid("Cysteine","Cys","C","TGC,TGT",{"volume": 55.0}),
-            AminoAcid("Aspartic acid","Asp","D","GAC,GAT",{"volume": 54.0}),
-            AminoAcid("Glutamic acid","Glu","E","GAA,GAG",{"volume": 83.0}),
-            AminoAcid("Phenylalanine","Phe","F","TTC,TTT",{"volume": 132.0}),
-            AminoAcid("Glycine","Gly","G","GGA,GGC,GGG,GGT",{"volume": 3.0}),
-            AminoAcid("Histidine","His","H","CAC,CAT",{"volume": 96.0}),
-            AminoAcid("Isoleucine","Ile","I","ATA,ATC,ATT",{"volume": 111.0}),
-            AminoAcid("Lysine","Lys","K","AAA,AAG",{"volume": 119.0}),
-            AminoAcid("Leucine","Leu","L","CTA,CTC,CTG,CTT,TTA,TTG",{"volume": 111.0}),
-            AminoAcid("Methionine","Met","M","ATG",{"volume": 105.0}),
-            AminoAcid("Asparagine","Asn","N","AAC,AAT",{"volume": 56.0}),
-            AminoAcid("Proline","Pro","P","CCA,CCC,CCG,CCT",{"volume": 32.0}),
-            AminoAcid("Glutamine","Glu","Q","CAA,CAG",{"volume": 85.0}),
-            AminoAcid("Arginine","Arg","R","AGA,AGG,CGA,CGC,CGG,CGT",{"volume": 124.0}),
-            AminoAcid("Serine","Set","S","AGC,AGT,TCA,TCC,TCG,TCT",{"volume": 32.0}),
-            AminoAcid("Threonine","Thr","T","ACA,ACC,ACG,ACT",{"volume": 61.0}),
-            AminoAcid("Valine","Val","V","GTA,GTC,GTG,GTT",{"volume": 84.0}),
-            AminoAcid("Tryptophan","Trp","W","TGG",{"volume": 170.0}),
-            AminoAcid("Tyrosine","Tyr","Y","TAC,TAT",{"volume": 136.0}),
+            AminoAcid("Alanine","A",{'volume': 31.0}),
+            AminoAcid("Cysteine","C",{"volume": 55.0}),
+            AminoAcid("Aspartic acid","D",{"volume": 54.0}),
+            AminoAcid("Glutamic acid","E",{"volume": 83.0}),
+            AminoAcid("Phenylalanine","F",{"volume": 132.0}),
+            AminoAcid("Glycine","G",{"volume": 3.0}),
+            AminoAcid("Histidine","H",{"volume": 96.0}),
+            AminoAcid("Isoleucine","I",{"volume": 111.0}),
+            AminoAcid("Lysine","K",{"volume": 119.0}),
+            AminoAcid("Leucine","L",{"volume": 111.0}),
+            AminoAcid("Methionine","M",{"volume": 105.0}),
+            AminoAcid("Asparagine","N",{"volume": 56.0}),
+            AminoAcid("Proline","P",{"volume": 32.0}),
+            AminoAcid("Glutamine","Q",{"volume": 85.0}),
+            AminoAcid("Arginine","R",{"volume": 124.0}),
+            AminoAcid("Serine","S",{"volume": 32.0}),
+            AminoAcid("Threonine","T",{"volume": 61.0}),
+            AminoAcid("Valine","V",{"volume": 84.0}),
+            AminoAcid("Tryptophan","W",{"volume": 170.0}),
+            AminoAcid("Tyrosine","Y",{"volume": 136.0}),
             ]
     def getAminoAcids(self):
         return self.__aminoAcids
 # This is the protein class. here you find all protein data and amino acid data found in this protien.
 #  Please be sure to call 'updateData()' to make sure all your data is updated before any calculations
 class Protein:
-    def __init__(self,sequence,name = "Protein"):
+    def __init__(self,sequence, foldNum, name = "Protein",):
         self.sequence = sequence
         self.__amino_acids = []
         self.data = {}
+        self.data["fold"] = "fold" + foldNum
         self.__name = name
     # this function counts the amount of the given amino_acid is contained in this protein.
     def getNumberOfAminoAcidInProtein(self,amino_acid):
-        sequences = chunkstring(self.sequence,3)
         count = 0
-        lastIndex = -3
-        for codon in amino_acid.getCondons():
-            while lastIndex != -1:
-                lastIndex = self.sequence.find(codon,lastIndex+3)
+        lastIndex = 0
+        while lastIndex != -1:
+        #    print("testing if "+str(amino_acid.m1code)+" in "+ self.sequence[lastIndex: len(self.sequence)-1])
+            lastIndex = self.sequence.find(amino_acid.m1code,lastIndex)
+            if lastIndex != -1:
                 count+=1
+                lastIndex+=1
+        return count
+    # this function returns the total amount of amino acids in this protein
+    def getNumberOfAllAminoAcidsInProtein(self):
+        count = 0
+        for amino_acid in self.__amino_acids:
+            count+=amino_acid.data["count"]
         return count
     # this function tests if the given amino_acid is contained in this protein.
     # if it is, then it is added to the protein's 'self.__amino_acid' array
@@ -84,22 +84,12 @@ class Protein:
             volume += amino_acid.data["volume"]*amino_acid.data["count"]
         self.data["volume"] = volume
         return volume
+    # returns the name of the protein
+    def getName(self):
+        return self.__name
     # updates the data in the protein
     def updateData(self):
         self.getVolume()
-    # unfinished!
-    def formatForCSV(self):
-        updateData()
-        return self.__name+","+self.data["volume"]+","+self.sequence
-    # overriden str()
-    def __str__(self):
-        s = self.__name+"\nProtein Data:"
-        for key,value in self.data.items():
-            s+= "\n\t "+str(key)+": "+str(value)
-        s+="\nAmino Acid Data:"
-        for a in self.__amino_acids:
-            s += "\n\t"+str(a)
-        return s
 # this holds an array of protiens and related functions
 class Proteins:
     def __init__(self):
@@ -113,29 +103,23 @@ class Proteins:
     def getProteins(self):
         return self.__proteins
     def outputFeatureVector(self):
-        with open('test.csv', 'w') as f:
-            fieldnames = ['volume']
+        with open('volume.csv', 'w+') as f:
+            fieldnames = ['fold','volume']
             writer = csv.DictWriter(f, fieldnames = fieldnames)
             writer.writeheader()
             for protein in self.__proteins:
                 #print(protein)
-                writer.writerow({'volume': protein.data["volume"]})
+                number_of_amino_acids = protein.getNumberOfAllAminoAcidsInProtein()
+                if(number_of_amino_acids == 0):
+                    print("critical error at protein"+protein.getName())
+                    number_of_amino_acids = 1
+                writer.writerow({'fold': protein.data["fold"], 'volume': protein.data["volume"]/number_of_amino_acids})
                 #f.write("%s,%s\n"%(key,my_dict[key]))
-            
 
             
 ## FUNCTIONS #######################################################################################################################
 
-# normalizes the given value to a number between 0-1
-#   (number) value:         value to be normalized
-#   (number) min_value:     smallest possible value
-#   (number) max_value:     largest posible value
-def normalize(value,min_value,max_value):
-    return (value - min_value)/(max_value - min_value)
 
-# breaks the given string into chunks by length
-def chunkstring(string, length):
-    return (string[0+i:length+i] for i in range(0, len(string), length))
 
 #loads the given file path in read mode and returns an array of string data
 def loadFile(path):
@@ -144,15 +128,6 @@ def loadFile(path):
     file.close()
     return data
 
-#converts Dictionary contents into a csv file
-def convertDictonaryToCSV(my_dict):
-    with open('test.csv', 'w') as f:
-        #fieldnames = ['volume']
-        #writer = csv.DictWriter(csvfile, fieldname = fieldnames)
-        #writer.writeheader
-        for key in my_dict.keys():
-            #writer.writerow({'volume': my_dict[key].})
-            f.write("%s,%s\n"%(key,my_dict[key]))
 
 ## CONSTANTS
 
@@ -170,7 +145,7 @@ AMINO_ACIDS = AminoAcids()
 # load all the data
 sequence_data = loadFile(SEQUENCE_FILE_PATH)
 
-#label_data = loadFile(LABEL_FILE_PATH)
+label_data = loadFile(LABEL_FILE_PATH)
 #comp_data = loadFile(COMP_FILE_PATH)
 #g_data = loadFile(GDATA_FILE_PATH)
 #occur_data = loadFile(OCCUR_FILE_PATH)
@@ -178,21 +153,11 @@ sequence_data = loadFile(SEQUENCE_FILE_PATH)
 proteins = Proteins()
 # note: it is assumed that all the data is the same length
 for i in range(len(sequence_data)):
-    proteins.addProtein(Protein(sequence_data[i],"Protein "+str(i)))
+    if(len(str(sequence_data[i])) > 0):
+        proteins.addProtein(Protein(sequence_data[i], label_data[i], "Protein "+str(i)))
+    else:
+        print("warning@"+SEQUENCE_FILE_PATH+"@"+str(i)+": cannot add empty protein string!")
 
-## not needed any more ##
-##########################################################################################################
-#    combined_data.append(AminoData(label_data[i],sequence_data[i],comp_data[i],g_data[i],occur_data[i]))
-#    proteins.append(Protein(sequence_data[i],"Protein "+str(i)))
-#    for j in range(len(AMINO_ACIDS.getAminoAcids())):
-#        proteins[i].testAndAddAminoAcid(AMINO_ACIDS.getAminoAcids()[j])
-#    proteins[i].updateData()
-##########################################################################################################
-
-# print out results
-for protein in proteins.getProteins():
-    print(str(protein))
-
-proteins.outputFeatureVector()
+    proteins.outputFeatureVector()
 
 print("done...")
